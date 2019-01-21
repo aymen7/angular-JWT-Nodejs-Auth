@@ -1,5 +1,4 @@
 // required the dependencies
-require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const usersRoute = require('./routes/user.route');
