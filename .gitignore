@@ -42,3 +42,4 @@
 
 # enviroment variables
 */.env
+npm-debug.log
