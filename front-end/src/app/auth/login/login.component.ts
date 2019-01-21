@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,7 +11,7 @@ export class LoginComponent implements OnInit {
   public myForm: FormGroup;
   // controls array that we use to determine if we should/shouldn't display certain html elements
   public controlFlags: any;
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder, private _service: AuthService, private _router: Router) {
     /**
      * init the form with formBuilder group
      */
@@ -30,13 +32,12 @@ export class LoginComponent implements OnInit {
    }
   formSubmitted(form: any) {
     const valid = this.myForm.valid;
-    if (!valid) {
-      console.log(`form is not valid`);
+    if (valid) {
+      this.getConnectedUser(this.myForm.controls['email'].value,
+      this.myForm.controls['password'].value);
     }
-    /**
-     * TODO
-     * HANDLE form if valid
-     */
+
+
   }
   disableSubmitBtn() {
       this.myForm.valueChanges.subscribe(
@@ -81,8 +82,15 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
-
+  getConnectedUser(email: string, pwd: string) {
+    this._service.login(email, pwd).subscribe(
+      data => localStorage.setItem('token', data.token),
+      (err)  => {console.log(`err: ${err.message}`); } ,
+      () => {
+        this._router.navigate(['pages']);
+      }
+    );
+    }
   ngOnInit() {
     this.disableSubmitBtn();
     this.addDangerClassStyle();
