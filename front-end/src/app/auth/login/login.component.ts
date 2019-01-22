@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
@@ -26,8 +26,14 @@ export class LoginComponent implements OnInit {
       submitBtnIsDisabled: false,
       addDangerClassStyleEmail: true,
       addDangerClassStylePassword: true,
-      emailErrorsMsg: [],
-      passwordErrorsMsg: [],
+      emailErrorsMsg: {
+        addRequiredMsg: false,
+        addInvalidMsg: false,
+      },
+      passwordErrorsMsg: {
+        addRequiredMsg: false,
+        addMinLengthMsg: false,
+      },
     };
    }
   formSubmitted(form: any) {
@@ -36,8 +42,6 @@ export class LoginComponent implements OnInit {
       this.getConnectedUser(this.myForm.controls['email'].value,
       this.myForm.controls['password'].value);
     }
-
-
   }
   disableSubmitBtn() {
       this.myForm.valueChanges.subscribe(
@@ -61,24 +65,16 @@ export class LoginComponent implements OnInit {
   displayEmailDangerParagraph() {
     this.myForm.controls['email'].valueChanges.subscribe(
       () => {
-        if (this.myForm.controls['email'].hasError('required') && !this.controlFlags.emailErrorsMsg.includes('required')) {
-          this.controlFlags.emailErrorsMsg.push('required');
-        }
-        if (!this.myForm.controls['email'].valid && !this.controlFlags.emailErrorsMsg.includes('invalid')) {
-          this.controlFlags.emailErrorsMsg.push('invalid');
-        }
+          this.controlFlags.emailErrorsMsg.addRequiredMsg = this.myForm.controls['email'].hasError('required');
+          this.controlFlags.emailErrorsMsg.addInvalidMsg = !this.myForm.controls['email'].valid;
       }
     );
   }
   displayPasswordDangerParagraph() {
     this.myForm.controls['password'].valueChanges.subscribe(
       () => {
-        if (this.myForm.controls['password'].hasError('required') && !this.controlFlags.passwordErrorsMsg.includes('required')) {
-          this.controlFlags.passwordErrorsMsg.push('required');
-        }
-        if (!this.myForm.controls['password'].valid && !this.controlFlags.passwordErrorsMsg.includes('invalid')) {
-          this.controlFlags.passwordErrorsMsg.push('invalid');
-        }
+        this.controlFlags.passwordErrorsMsg.addRequiredMsg = this.myForm.controls['password'].hasError('required');
+        this.controlFlags.passwordErrorsMsg.addMinLengthMsg = this.myForm.controls['password'].hasError('minlength');
       }
     );
   }

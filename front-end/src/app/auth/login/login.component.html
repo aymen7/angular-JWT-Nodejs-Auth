@@ -15,11 +15,12 @@
                                   formControlName='email'
                                   [class.is-danger]="!controlFlags.addDangerClassStyleEmail">
                               </div>
-                              <div class="ngForWrapper" *ngFor="let error of controlFlags.emailErrorsMsg">
-                                <p class="help is-danger">
-                                    {{error}}
+                                <p class="help is-danger" *ngIf="controlFlags.emailErrorsMsg.addRequiredMsg">
+                                    required email
                                 </p>
-                              </div>
+                                <p class="help is-danger" *ngIf="controlFlags.emailErrorsMsg.addInvalidMsg">
+                                    invalid email
+                                </p>
                           </div>
 
                           <div class="field">
@@ -28,11 +29,12 @@
                                   formControlName='password' 
                                   [class.is-danger]="!controlFlags.addDangerClassStylePassword">
                               </div>
-                              <div class="ngForWrapper" *ngFor="let error of controlFlags.passwordErrorsMsg">
-                                <p class="help is-danger">
-                                    {{error}}
-                                </p>
-                              </div>
+                              <p class="help is-danger" *ngIf="controlFlags.passwordErrorsMsg.addRequiredMsg">
+                                password is required
+                              </p>
+                              <p class="help is-danger" *ngIf="controlFlags.passwordErrorsMsg.addMinLengthMsg">
+                                Your password must be at least 8 characters long. 
+                              </p>
                           </div>
                           <div class="field">
                               <label class="checkbox">
